@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const PORT = process.env.PORT || 001;
+const PORT = process.env.PORT || 5001;
 
 //Initialize user's input
 let userNotes = [];
@@ -52,7 +52,7 @@ app.post("/api/notes", function(req, res) {
     } catch (err) {
       throw err;
     }
-  });
+});
 
 app.delete("/api/notes/:id", function(req, res) {
     try {
