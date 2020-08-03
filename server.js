@@ -36,7 +36,7 @@ app.post("/api/notes", function(req, res) {
       userNotes = fs.readFileSync("./Develop/db/db.json", "utf8");
       console.log(userNotes);
   
-      notesData = JSON.parse(userNotes);
+      userNotes = JSON.parse(userNotes);
       //sets ID
       req.body.id = userNotes.length;
       userNotes.push(req.body); 
