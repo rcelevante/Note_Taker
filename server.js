@@ -30,25 +30,69 @@ app.get("/api/notes", function(err, res) {
     res.json(userNotes);
 });
 
+// writes the new note into json file
+app.post("/api/notes", function(req, res) {
+    try {
+      userNotes = fs.readFileSync("./Develop/db/db.json", "utf8");
+      console.log(userNotes);
+  
+      notesData = JSON.parse(userNotes);
+      //sets ID
+      req.body.id = userNotes.length;
+      userNotes.push(req.body); 
+      // make it a string then write
+      userNotes = JSON.stringify(userNotes);
+      fs.writeFile("./Develop/db/db.json", userNotes, "utf8", function(err) {
+        // throw an error handling
+        if (err) throw err;
+      });
+    
+      res.json(JSON.parse(userNotes));
+  
+    } catch (err) {
+      throw err;
+    }
+  });
 
+app.delete("/api/notes/:id", function(req, res) {
+    try {
+     
+      userNotes = fs.readFileSync("./Develop/db/db.json", "utf8");
+      userNotes = JSON.parse(userNotes);
+      //deletes notes
+      userNotes = userNotes.filter(function(note) {
+        return note.id != req.params.id;
+      });
+      // turn into a string then write
+      userNotes = JSON.stringify(userNotes);
+      fs.writeFile("./Develop/db/db.json", userNotes, "utf8", function(err) {
+        // error handling
+        if (err) throw err;
+      });
+  
+      res.send(JSON.parse(userNotes));
+      
+    } catch (err) {
+      throw err;
+    }
+  });
 
-
-// Web page when the Get started button is clicked
+// Get started button clicked
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "Develop/public/notes.html"));
   });
 
-// If no matching route is found default to home
+// return to original Webpage
 app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "Develop/public/index.html"));
-  });
+});
   
 
 app.get("/api/notes", function(req, res) {
     return res.sendFile(path.json(__dirname, "Develop/db/db.json"));
-  });
+});
 
-// Start the server on the port
+// Start server
 app.listen(PORT, function() {
     console.log("SERVER IS LISTENING: " + PORT);
 });
